@@ -1,0 +1,141 @@
+:root {
+	--primary-color: #48546a;
+	--secondary-color: #ccd234;
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+html, body {
+	height: 100%;
+	background: #fafafa;
+	font-family: Helvetica, sans-serif;
+}
+
+a {
+	color: #008CBA;
+	text-decoration: none;
+}
+
+p {
+	margin-bottom: 1rem;
+}
+
+h1, h2 {
+	color: #222;
+}
+
+header {
+	font-weight: bold;
+	font-size: 1.25rem;
+	color: #000c;
+}
+
+button {
+	cursor: pointer;
+	color: #fff;
+	background-color: var(--primary-color);
+	border: solid 1px var(--primary-color);
+	border-radius: 3px;
+	padding: 0.33rem 0.5rem;
+	margin: 0.33rem 0;
+}
+
+button:hover {
+	background-color: var(--secondary-color);
+	border-color: var(--secondary-color);
+}
+
+button.secondary {
+	background-color: transparent;
+	color: var(--primary-color);
+}
+
+button.secondary:hover {
+	color: var(--secondary-color);
+	border-color: var(--secondary-color);
+}
+
+input {
+	margin: 0.33rem 0;
+	padding: 0.33rem;
+	border: solid 1px #777;
+	border-radius: 3px;
+}
+
+input.invalid {
+	background-color: #f77;
+}
+
+input:focus {
+	background-color: #fff;
+}
+
+ul, ol {
+	margin-top: 0.5rem;
+}
+
+pre {
+	margin: 1rem 0;
+}
+
+.paystation-fold {
+	height: 10px;
+	background: #a2a91b;
+	background: linear-gradient(30deg, #a2a91b 0%, #b2ba27 33%, #ccd234 33%, #b2ba27 100%);
+}
+
+.header {
+	padding: 1rem 0.5rem 0.5rem;
+	min-height: 60px;
+	text-align: center;
+	box-shadow: 1px 1px 10px 0 #ddd;
+	background: #fff;
+	color: #333;
+}
+
+.content {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin: 0 1rem;
+}
+
+iframe.paystation-payment-frame {
+	border: none;
+	min-width: 400px;
+	width: 100%;
+	min-height: 429px;
+}
+
+.box {
+	padding: 1rem;
+	min-width: 280px;
+	flex: 1;
+	flex-basis: 50%;
+}
+
+.highlight-variable .hljs-tag .hljs-string {
+	color: lime;
+	font-weight: bold;
+}
+
+#payment-amount {
+	max-width: 150px;
+}
+
+#payment-page-qr-code {
+	margin: 1rem auto;
+	display: inline-block;
+}
+
+.center {
+	text-align: center;
+}

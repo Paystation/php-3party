@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>3 Party Paystation iFrame Sample Code</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/paystation.css?1">
+	<link rel="stylesheet" href="css/monokai-sublime.min.css">
+</head>
+<body>
+<div class="paystation-fold"></div>
+<h2 class="header">iFrame Sample Code</h2>
+
+<div class="content">
+	<div class="box center">
+		<form method="post" action="checkout.php">
+			<label>Make a payment: <input type="tel" name="amount" id="payment_amount" placeholder="$ Amount"/></label>
+			<button type="submit" id="payment_button">Pay Here</button>
+			<button type="submit" id="checkout_button" class="secondary">Pay at Checkout</button>
+		</form>
+
+		<div id="payment-page-qr-code" style="display: none;">
+			Alternatively complete the payment on your phone.
+		</div>
+	</div>
+	<div class="box">
+		<div id="payment_wrapper" class="payment-wrapper"></div>
+	</div>
+	<article class="box">
+		<h4>Payment Journey</h4>
+		<br>
+		<p>Create a test transaction to see the payment form. <a href="//www2.paystation.co.nz/for-developers/test-cards/" target="_blank" rel="nofollow">Test cards can be found here</a>.</p>
+		<p>Ways to show people our payment page:</p>
+		<ul>
+			<li>Redirect them to our payment page and have them redirected back to your site once the transaction is completed.</li>
+			<li>Display our payment page in a popup window.</li>
+			<li>Display our payment page in an iframe on your website, allowing them to complete the transaction without leaving your checkout page.</li>
+		</ul>
+		<br>
+		Payment journey for iframes:
+		<ol>
+			<li>Create a transaction which will give you a payment page URL.</li>
+			<li>Open that URL in an iframe on your checkout page.</li>
+			<li>Poll our API to check if the transaction has completed.</li>
+			<li>Close the iframe when the transaction completes.</li>
+		</ol>
+	</article>
+	<article class="box">
+		<h4>iFrame Dimensions</h4>
+		<br>
+		<a href="//docs.paystation.co.nz/#payment-page-customization" target="_blank" rel="nofollow">See the full documentation here.</a>
+		<br>
+		<br>
+		<p>
+			Width: 300px to 500px. If the frame is wider than 500px it will center the form and display the pages background colour around it.<br>
+			Height: 450px to 650px. It depends on how many payment types you have available and how many fields are displayed on your form.
+		</p>
+
+		There are some things you can do to make the payment form blend into your website:
+		<ul>
+			<li>Style the iframes so they don't have borders, and are large enough to fit the payment form.
+				<pre><code class="css">iframe.paystation-payment-frame {
+	border: none;
+	min-width: 400px;
+	min-height: 470px; /* make a test payment and preview the page to get the height */
+}</code></pre>
+			</li>
+			<li>Append your websites background colour to the payment URL, <b>b=hex</b> e.g.<br>
+				https://payments.paystation.co.nz/hosted/?hk=RCwW10xWVlC&amp;<b>b=ff00ff</b>
+				<pre><code class="html">&lt;iframe class="paystation-payment-frame" src="<span class="highlight-variable">[payment_url]</span>&amp;b=<span class="highlight-variable">[background_colour]</span>"&gt;&lt;/iframe&gt;</code></pre>
+			</li>
+		</ul>
+	</article>
+</div>
+
+<script>()=>{};let upToDateBrowserDetected=true;</script>
+<script>try{upToDateBrowserDetected}catch(e){alert("Please update your browser.");}</script>
+<script src="js/highlight.min.js"></script>
+<script src="js/paystation.js?2"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/qrcode.min.js"></script>
+<script>
+	hljs.initHighlightingOnLoad(); // this is just to highlight the sample code
+
+	// Note: none of this javascript is necessary if you plan to have your checkout on a separate page.
+	let _paymentFrame, _qrCode;
+	const _paymentFrameWrapper = document.getElementById('payment_wrapper');
+	const _paymentAmountInput = document.getElementById('payment_amount');
+	const _paymentAmountButton = document.getElementById('payment_button');
+	const _checkoutButton = document.getElementById('checkout_button');
+	const _qrCodeWrapper = document.getElementById("payment-page-qr-code");
+	let _transactionComplete = false;
+	let _goingToCheckout = false;
+
+	// This gets called whenever a new page is loaded in the iframe. This is only possible if you are using redirects.
+	function onFrameLoaded(iframe) {
+		// Browsers shouldn't allow access to the content of an iframe unless it is from your own domain.
+		// So, if we can access the content, then the user has been redirected back to your site from paystation.
+		if (Paystation.canAccessIFrame(iframe)) {
+			// We have redirected back to our own site inside the iframe.
+			// It is possible to grab some data from inside the frame, but it is better and often quicker to use polling to get this response as that data can be trusted.
+			Paystation.closePaymentFrame(iframe);
+		}
+	}
+
+	// This function will get a response every time we poll the website.
+	// Most of these responses will get transaction details for an incomplete transaction while the user is still entering their details in the iframe.
+	function onTransactionResponse(err, transaction) {
+		if (err) {
+			// have some error handling if you want
+		}
+
+		// hasError is for all errors regardless if they come from paystation or us, which could happen before the transaction completes.
+		// errorCode is a paystation response which is set after a transaction is complete. A negative error code means no error code has been returned.
+		if (transaction && (transaction.errorCode > -1 || transaction.hasError)) {
+			onTransactionComplete(transaction);
+		}
+	}
+
+	// Remove the iframe and stop polling the transaction details. Show a response to the user.
+	function onTransactionComplete(transaction) {
+		if (_transactionComplete) {
+			return;
+		}
+		_transactionComplete = true;
+
+		Paystation.closePaymentFrame(_paymentFrame);
+		Paystation.stopPolling();
+		displayResult(transaction.errorMessage);
+	}
+
+	function displayResult(msg) {
+		// Display the outcome to the user i.e. "Transaction successful" or "Insufficient funds"
+		// You might want to handle these differently depending on the errorCode (transaction.errorCode)
+		_paymentFrameWrapper.innerHTML = '<h1>' + msg + '</h1>';
+		showQrCode(false);
+		_paymentAmountInput.disabled = false;
+		_paymentAmountButton.disabled = false;
+		_checkoutButton.disabled = false;
+	}
+
+	function validateAmount(input, amount) {
+		const valid = parseInt(amount * 100) > 0;
+		if (!valid) {
+			input.classList.add('invalid');
+		}
+		else {
+			input.classList.remove('invalid');
+		}
+		return valid;
+	}
+
+	function payHere(e) {
+		const amount = parseFloat(_paymentAmountInput.value);
+		if (!validateAmount(_paymentAmountInput, amount)) {
+			e.preventDefault();
+			return;
+		}
+
+		if (_goingToCheckout) {
+			return;
+		}
+
+		e.preventDefault();
+		_paymentAmountInput.disabled = true;
+		_paymentAmountButton.disabled = true;
+		_checkoutButton.disabled = true;
+
+		// create the transaction, get the URL for iframe, show it to the user, begin polling the transaction to see when they have finished paying.
+		Paystation.createTransaction(amount, (err, transaction) => {
+			if (err) {
+				displayResult(err);
+				return;
+			}
+
+			showQrCode(transaction.digitalOrderUrl);
+
+			_transactionComplete = false;
+			_paymentFrameWrapper.innerHTML = '';
+			_paymentFrame = Paystation.createPaymentFrame(_paymentFrameWrapper, transaction.digitalOrderUrl, onFrameLoaded, true);
+			_paymentFrame.classList.add('paystation-payment-frame');
+			Paystation.pollTransactionDetails(transaction.transactionId, onTransactionResponse);
+		});
+	}
+
+	function payAtCheckout() {
+		_goingToCheckout = true;
+	}
+
+	function initQRCode() {
+		const a = document.createElement('a');
+		a.setAttribute('rel', 'nofollow');
+		a.setAttribute('target', '_blank');
+		_qrCode = new QRCode(a, {width: 275, height: 275});
+		_qrCodeWrapper.appendChild(a);
+	}
+
+	function isMobile() {
+		return /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent);
+	}
+
+	function showQrCode(url) {
+		if (!url || isMobile()) {
+			_qrCodeWrapper.style.display = 'none';
+			return;
+		}
+
+		if (!_qrCode) initQRCode();
+
+		_qrCode.makeCode(url);
+		_qrCode._el.href = url;
+		_qrCodeWrapper.style.display = '';
+	}
+
+	_paymentAmountButton.form.addEventListener('submit', payHere);
+	_checkoutButton.addEventListener('click', payAtCheckout);
+	_paymentAmountInput.addEventListener('blur', function () {
+		validateAmount(this, parseFloat(this.value));
+	});
+</script>
+</body>
+</html>
