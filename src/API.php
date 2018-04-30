@@ -4,18 +4,18 @@ namespace Paystation;
 
 use SimpleXMLElement;
 
-class Paystation {
+class API {
 	private $lookupURL = 'https://payments.paystation.co.nz/lookup/';
-	private $paymentURL = 'https://www.paystation.co.nz/direct/paystation.dll';
+	private $apiURL = 'https://www.paystation.co.nz/direct/paystation.dll';
 
-	/** @var PaystationDBInterface $db */
+	/** @var TransactionDBInterface $db */
 	private $db;
 	private $paystationId;
 	private $hmacKey;
 	private $gatewayId;
 	private $testMode;
 
-	public function __construct(PaystationDBInterface $db, $paystationId = '', $hmacKey = '', $gatewayId = '', $testMode = false) {
+	public function __construct(TransactionDBInterface $db, $paystationId = '', $hmacKey = '', $gatewayId = '', $testMode = false) {
 		$this->db = $db;
 		$this->paystationId = $paystationId;
 		$this->hmacKey = $hmacKey;
@@ -27,8 +27,8 @@ class Paystation {
 		$this->lookupURL = $url;
 	}
 
-	public function setPaymentUrl($url) {
-		$this->paymentURL = $url;
+	public function setApiUrl($url) {
+		$this->apiURL = $url;
 	}
 
 	/**
@@ -61,10 +61,10 @@ class Paystation {
 	/**
 	 * @param int $amount amount in cents
 	 * @param string $merchantReference
-	 * @return PaystationTransaction
+	 * @return Transaction
 	 */
 	function createTransaction($amount, $merchantReference = '') {
-		$txn = new PaystationTransaction();
+		$txn = new Transaction();
 		$txn->amount = $amount;
 		$txn->merchantReference = $merchantReference;
 		$txn->testMode = $this->testMode;
@@ -90,7 +90,7 @@ class Paystation {
 			$params['pstn_tm'] = 't';
 		}
 
-		$result = $this->post($this->paymentURL, $params);
+		$result = $this->post($this->apiURL, $params);
 		$json = json_decode($result, true);
 
 		$json = isset($json['InitiationRequestResponse']) ? $json['InitiationRequestResponse'] : (isset($json['response']) ? $json['response'] : null);
@@ -129,7 +129,7 @@ class Paystation {
 		}
 
 		if (!$txn) {
-			$txn = new PaystationTransaction();
+			$txn = new Transaction();
 			$txn->errorMessage = 'No transaction details found.';
 		}
 
@@ -139,7 +139,7 @@ class Paystation {
 	private function lookupTransaction($transactionId) {
 		$result = $this->post($this->lookupURL, ['pi' => $this->paystationId, 'ti' => $transactionId]);
 		$xml = new SimpleXMLElement($result);
-		$txn = new PaystationTransaction();
+		$txn = new Transaction();
 		if (isset($xml->LookupResponse->PaystationTransactionID) && $xml->LookupResponse->PaystationTransactionID == $transactionId) {
 			$txn->transactionId = "{$xml->LookupResponse->PaystationTransactionID}";
 			$txn->amount = "{$xml->LookupResponse->PurchaseAmount}";
@@ -194,7 +194,7 @@ class Paystation {
 	 */
 	public function savePostResponse($postBody) {
 		$xml = new SimpleXMLElement($postBody);
-		$txn = new PaystationTransaction();
+		$txn = new Transaction();
 
 		$txn->transactionId = "$xml->ti";
 		$txn->amount = "$xml->PurchaseAmount";

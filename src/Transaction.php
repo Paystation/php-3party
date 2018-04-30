@@ -1,7 +1,7 @@
 <?php
 namespace Paystation;
 
-class PaystationTransaction {
+class Transaction {
 
 	public $transactionId;
 	public $merchantSession;

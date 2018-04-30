@@ -1,15 +1,26 @@
 <?php
-require_once __DIR__ . '/Paystation.php';
-require_once __DIR__ . '/PaystationDBInterface.php';
-require_once __DIR__ . '/PaystationTransaction.php';
-require_once __DIR__ . '/SamplePaystationDB.php';
+require_once __DIR__ . '/API.php';
+require_once __DIR__ . '/TransactionDBInterface.php';
+require_once __DIR__ . '/Transaction.php';
+require_once __DIR__ . '/SampleTransactionDB.php';
 
-$config = [
-	'paystation_id' => 'PAYSTATIONID', // enter your Paystation ID
-	'gateway_id' => 'GATEWAYID', // enter your gateway ID
-	'hmac_key' => 'YOUR_SECURITY_CODE', // each gateway has its own HMAC key, enter your one here
-	'test_mode' => true // set to 'false' for production transactions
-];
+$configFilePath = __DIR__ . '/../config.json';
+if (!file_exists($configFilePath)) {
+	die('Missing config.json');
+}
 
-$db = new SamplePaystationDB();
-$paystation = new \Paystation\Paystation($db, $config['paystation_id'], $config['hmac_key'], $config['gateway_id'], $config['test_mode']);
+$config = json_decode(file_get_contents($configFilePath), true);
+
+if (!isset($config['paystation_id'], $config['hmac_key'], $config['gateway_id'], $config['test_mode'])) {
+	die('config.json is missing credentials.');
+}
+
+$paystation = new \Paystation\API(new SampleTransactionDB(), $config['paystation_id'], $config['hmac_key'], $config['gateway_id'], $config['test_mode']);
+
+if (isset($config['api_url'])) {
+	$paystation->setApiUrl($config['api_url']);
+}
+
+if (isset($config['lookup_url'])) {
+	$paystation->setLookupUrl($config['lookup_url']);
+}

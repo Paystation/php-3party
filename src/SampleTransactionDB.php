@@ -1,9 +1,9 @@
 <?php
 
-use \Paystation\PaystationTransaction;
-use \Paystation\PaystationDBInterface;
+use \Paystation\Transaction;
+use \Paystation\TransactionDBInterface;
 
-class SamplePaystationDB implements PaystationDBInterface {
+class SampleTransactionDB implements TransactionDBInterface {
 	private $filePath = __DIR__ . '/../temp/latest_transaction';
 
 	public function __construct() {
@@ -11,7 +11,7 @@ class SamplePaystationDB implements PaystationDBInterface {
 
 	/**
 	 * @param String $transactionId
-	 * @return \Paystation\PaystationTransaction|null null if not found.
+	 * @return \Paystation\Transaction|null null if not found.
 	 */
 	public function get($transactionId) {
 		if (!isset($transactionId) || !$transactionId || !file_exists($this->filePath)) {
@@ -23,14 +23,14 @@ class SamplePaystationDB implements PaystationDBInterface {
 		fclose($file);
 
 		// In this example, only the one most recent transaction details are stored. This is just a sanity check to better mimic a database query.
-		return $txn instanceof PaystationTransaction && isset($txn->transactionId) && $txn->transactionId == $transactionId ? $txn : null;
+		return $txn instanceof Transaction && isset($txn->transactionId) && $txn->transactionId == $transactionId ? $txn : null;
 	}
 
 	/**
 	 * Update any field that's not null.
-	 * @param \Paystation\PaystationTransaction $txn
+	 * @param \Paystation\Transaction $txn
 	 */
-	public function save(\Paystation\PaystationTransaction $txn) {
+	public function save(\Paystation\Transaction $txn) {
 		if (!isset($txn->transactionId)) {
 			return;
 		}
@@ -51,10 +51,10 @@ class SamplePaystationDB implements PaystationDBInterface {
 	}
 
 	/**
-	 * @param \Paystation\PaystationTransaction $transaction The transaction that needs a new ID.
+	 * @param \Paystation\Transaction $transaction The transaction that needs a new ID.
 	 * @return string The new ID for the transaction. Max length 64.
 	 */
-	public function createMerchantSession(\Paystation\PaystationTransaction $transaction) {
+	public function createMerchantSession(\Paystation\Transaction $transaction) {
 		return $this->generateRandomString(8) . time();
 	}
 

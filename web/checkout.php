@@ -7,7 +7,7 @@ if ($amount) {
 	$transaction = $paystation->createTransaction($amount, 'sample_checkout_transaction'); // Replace 'sample_checkout_transaction' with your own merchant reference.
 }
 else {
-	$transaction = new \Paystation\PaystationTransaction();
+	$transaction = new \Paystation\Transaction();
 	$transaction->transactionId = -1;
 	$transaction->hasError = true;
 	$transaction->errorMessage = "No amount specified.";
