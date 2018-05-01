@@ -38,8 +38,8 @@ class API {
 		$this->testMode = $testMode;
 	}
 
-	private function post($url, $content) {
-		$content = is_array($content) ? http_build_query($content) : $content;
+	private function post($url, array $content) {
+		$content = http_build_query($content);
 		$time = time();
 		$url .= '?' . http_build_query(['pstn_HMACTimestamp' => $time, 'pstn_HMAC' => hash_hmac('sha512', "{$time}paystation$content", $this->hmacKey)]);
 
@@ -194,18 +194,11 @@ class API {
 	 */
 	public function savePostResponse($postBody) {
 		$xml = new SimpleXMLElement($postBody);
-		$txn = new Transaction();
 
-		$txn->transactionId = "$xml->ti";
-		$txn->amount = "$xml->PurchaseAmount";
-		$txn->transactionTime = "$xml->TransactionTime";
-		$txn->hasError = false;
-		$txn->errorCode = "$xml->ec";
-		$txn->errorMessage = "$xml->em";
-		$txn->cardType = "$xml->ct";
-		$txn->merchantSession = "$xml->MerchantSession";
-		$txn->requestIp = "$xml->RequestIP";
-		$txn->merchantReference = "$xml->merchant_ref";
+		// If you don't want people to be able to spoof a successful payment by sending you a fake post response:
+		// Take the transaction ID and use it to query the lookup API.
+		// Ignore everything else in the post response unless you can verify the request is from Paystation.
+		$txn = $this->lookupTransaction($xml->ti);
 
 		if ($txn->transactionId) {
 			$this->db->save($txn);

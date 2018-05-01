@@ -12,75 +12,28 @@
 
 <div class="content">
 	<div class="box center">
+		<p>Create a test transaction to see the payment form. <a href="//www2.paystation.co.nz/for-developers/test-cards/" target="_blank" rel="nofollow">Test cards can be found here</a>.</p>
+
 		<form method="post" action="checkout.php">
-			<label>Make a payment: <input type="tel" name="amount" id="payment_amount" placeholder="$ Amount"/></label>
+			<label>$&nbsp;<input type="tel" name="amount" id="payment_amount" placeholder="Amount" value="10"/></label>
 			<button type="submit" id="payment_button">Pay Here</button>
 			<button type="submit" id="checkout_button" class="secondary">Pay at Checkout</button>
 		</form>
-
-		<div id="payment-page-qr-code" style="display: none;">
-			Alternatively complete the payment on your phone.
-		</div>
 	</div>
 	<div class="box">
 		<div id="payment_wrapper" class="payment-wrapper"></div>
 	</div>
-	<article class="box">
-		<h4>Payment Journey</h4>
-		<br>
-		<p>Create a test transaction to see the payment form. <a href="//www2.paystation.co.nz/for-developers/test-cards/" target="_blank" rel="nofollow">Test cards can be found here</a>.</p>
-		<p>Ways to show people our payment page:</p>
-		<ul>
-			<li>Redirect them to our payment page and have them redirected back to your site once the transaction is completed.</li>
-			<li>Display our payment page in a popup window.</li>
-			<li>Display our payment page in an iframe on your website, allowing them to complete the transaction without leaving your checkout page.</li>
-		</ul>
-		<br>
-		Payment journey for iframes:
-		<ol>
-			<li>Create a transaction which will give you a payment page URL.</li>
-			<li>Open that URL in an iframe on your checkout page.</li>
-			<li>Poll our API to check if the transaction has completed.</li>
-			<li>Close the iframe when the transaction completes.</li>
-		</ol>
-	</article>
-	<article class="box">
-		<h4>iFrame Dimensions</h4>
-		<br>
-		<a href="//docs.paystation.co.nz/#payment-page-customization" target="_blank" rel="nofollow">See the full documentation here.</a>
-		<br>
-		<br>
-		<p>
-			Width: 300px to 500px. If the frame is wider than 500px it will center the form and display the pages background colour around it.<br>
-			Height: 450px to 650px. It depends on how many payment types you have available and how many fields are displayed on your form.
-		</p>
-
-		There are some things you can do to make the payment form blend into your website:
-		<ul>
-			<li>Style the iframes so they don't have borders, and are large enough to fit the payment form.
-				<pre><code class="css">iframe.paystation-payment-frame {
-	border: none;
-	min-width: 400px;
-	min-height: 470px; /* make a test payment and preview the page to get the height */
-}</code></pre>
-			</li>
-			<li>Append your websites background colour to the payment URL, <b>b=hex</b> e.g.<br>
-				https://payments.paystation.co.nz/hosted/?hk=RCwW10xWVlC&amp;<b>b=ff00ff</b>
-				<pre><code class="html">&lt;iframe class="paystation-payment-frame" src="<span class="highlight-variable">[payment_url]</span>&amp;b=<span class="highlight-variable">[background_colour]</span>"&gt;&lt;/iframe&gt;</code></pre>
-			</li>
-		</ul>
-	</article>
+	<div class="box center" id="payment-page-qr-code" style="display: none;">
+		Or use your phone.<br><br>
+	</div>
 </div>
 
 <script>()=>{};let upToDateBrowserDetected=true;</script>
 <script>try{upToDateBrowserDetected}catch(e){alert("Please update your browser.");}</script>
-<script src="js/highlight.min.js"></script>
-<script src="js/paystation.js?2"></script>
+<script src="js/paystation.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/qrcode.min.js"></script>
 <script>
-	hljs.initHighlightingOnLoad(); // this is just to highlight the sample code
-
 	// Note: none of this javascript is necessary if you plan to have your checkout on a separate page.
 	let _paymentFrame, _qrCode;
 	const _paymentFrameWrapper = document.getElementById('payment_wrapper');

@@ -1,7 +1,7 @@
 // provides functions to talk to the JSON api (paystation_ajax.php)
 (function () {
-	var _ajaxUrl = 'paystation_ajax.php'; // See createTransaction() and getTransaction() to change how fields are posted
-	var _pollingInterval;
+	let _ajaxUrl = 'paystation_ajax.php'; // See createTransaction() and getTransaction() to change how fields are posted
+	let _pollingInterval;
 
 	function hex (x) {
 		return ("0" + parseInt(x).toString(16)).slice(-2);
@@ -22,8 +22,8 @@
 		if (!element) {
 			return null;
 		}
-		var colour = '000000';
-		for (var i = 0; element && i < 10 && colour == '000000'; i++) {
+		let colour = '000000';
+		for (let i = 0; element && i < 10 && colour == '000000'; i++) {
 			colour = rgb2hex(window.getComputedStyle(element, null).backgroundColor);
 			element = element.parentElement;
 		}
@@ -33,10 +33,10 @@
 		return colour == '000000' ? null : colour;
 	}
 
-	var Paystation = {
+	let Paystation = {
 		// ajax e.g. post('your/url', 'transactionId=123&userid=123', function (err, data) { /*check for error and handle data*/ });
 		post: function(url, postData, callback) {
-			var request = new XMLHttpRequest();
+			let request = new XMLHttpRequest();
 			request.open('POST', url, true);
 			request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 
@@ -107,9 +107,9 @@
 		},
 
 		createPaymentFrame: function(parentElement, paymentURL, onLoad, changeBackgroundColour) {
-			var paymentFrame = document.createElement('iframe');
+			let paymentFrame = document.createElement('iframe');
 			if (changeBackgroundColour) {
-				var colour = tryToFindABackgroundColour(parentElement);
+				let colour = tryToFindABackgroundColour(parentElement);
 				if (colour) {
 					paymentURL += '&b=' + colour;
 				}
@@ -123,7 +123,6 @@
 		closePaymentFrame: function(paymentFrame) {
 			if (paymentFrame) {
 				paymentFrame.parentNode.removeChild(paymentFrame);
-				paymentFrame = false;
 			}
 		},
 
@@ -146,9 +145,9 @@
 		// Most browsers do not allow manipulating the contents of an iframe if it is in a different domain.
 		// This can be used to test if the client has been redirected back to your website after making the payment in paystation.
 		canAccessIFrame: function(iframe) {
-			var html = null;
+			let html = null;
 			try {
-				var doc = iframe.contentDocument || iframe.contentWindow.document;
+				let doc = iframe.contentDocument || iframe.contentWindow.document;
 				html = doc.body.innerHTML;
 			}
 			catch (err) {}

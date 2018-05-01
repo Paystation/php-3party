@@ -110,7 +110,6 @@ pre {
 
 iframe.paystation-payment-frame {
 	border: none;
-	min-width: 400px;
 	width: 100%;
 	min-height: 429px;
 }
@@ -122,17 +121,11 @@ iframe.paystation-payment-frame {
 	flex-basis: 50%;
 }
 
-.highlight-variable .hljs-tag .hljs-string {
-	color: lime;
-	font-weight: bold;
-}
-
 #payment-amount {
 	max-width: 150px;
 }
 
-#payment-page-qr-code {
-	margin: 1rem auto;
+#payment-page-qr-code, #payment-page-qr-code a {
 	display: inline-block;
 }
 

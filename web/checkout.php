@@ -27,7 +27,7 @@ else {
 
 		<div class="content">
 			<div class="box">
-				<a href="/">back</a>
+				<a href="./">back</a>
 				<br>
 				<br>
 				<div id="payment_wrapper" class="payment-wrapper">

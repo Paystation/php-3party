@@ -31,7 +31,7 @@ elseif (!$txn->errorCode) {
 <h2 class="header">Checkout</h2>
 <div class="content">
 	<div class="box">
-		<a href="/">back</a>
+		<a href="./">back</a>
 		<br>
 		<br>
 		<p><?= $transactionResult; ?></p>
