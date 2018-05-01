@@ -31,15 +31,15 @@ else {
 				<br>
 				<br>
 				<div id="payment_wrapper" class="payment-wrapper">
-					<?= $transaction->hasError ? "<h1 style=\"color:red\">$transaction->errorMessage</h1>" : "<iframe class=\"paystation-payment-frame\" src=\"$transaction[digitalOrderUrl]\"></iframe>" ?>
+					<?= $transaction->hasError ? "<h1 style=\"color:red\">$transaction->errorMessage</h1>" : "<iframe class=\"paystation-payment-frame\" src=\"$transaction->digitalOrderUrl\"></iframe>" ?>
 				</div>
 			</div>
 		</div>
-<script src="js/paystation.js?1"></script>
+<script src="js/paystation.js"></script>
 <script>
-	let _paymentFrameWrapper = document.getElementById('payment_wrapper');
-	let _paymentFrame = _paymentFrameWrapper.firstElementChild;
-	let _transactionId = '<?= $transaction->transactionId ?>';
+	const _paymentFrameWrapper = document.getElementById('payment_wrapper');
+	const _paymentFrame = _paymentFrameWrapper.firstElementChild;
+	const _transactionId = '<?= $transaction->transactionId ?>';
 
 	// make sure it isn't an error message
 	if (_paymentFrame.nodeName === 'IFRAME' && _transactionId) {
