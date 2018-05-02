@@ -3,9 +3,9 @@
 This demonstrates how to get a payment URL from our API and show it to a user. You will need your own Paystation credentials to run this demo. You can get an account set up by contacting our support team.
 
 To run this demo:
-- put your Paystation credentials in a file called `php-3party/config.json` [see config.sample.json](//github.com/Paystation/php-3party/blob/master/config.sample.json)
-- set `php-3party/web` as the web root.
-- make sure the user running PHP has read/write access to `php-3party/temp`
+- Put your Paystation credentials in a file called `php-3party/config.json` [see config.sample.json](//github.com/Paystation/php-3party/blob/master/config.sample.json)
+- Set `php-3party/web` as the web root.
+- Make sure the user running PHP has read/write access to `php-3party/temp`
 
 The payment journey for a user looks something like this:
 - User goes through your checkout and clicks a pay button.

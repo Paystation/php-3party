@@ -1,6 +1,6 @@
 <?php
 // This provides a JSON API for the client so that the payment can be done without having to redirect away from any page.
-require_once '../src/init.php';
+require_once __DIR__ . '/../src/init.php';
 
 header('content-type: application/json');
 

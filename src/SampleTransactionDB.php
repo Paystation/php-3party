@@ -1,7 +1,7 @@
 <?php
 
-use \Paystation\Transaction;
-use \Paystation\TransactionDBInterface;
+use Paystation\Transaction;
+use Paystation\TransactionDBInterface;
 
 class SampleTransactionDB implements TransactionDBInterface {
 	private $filePath = __DIR__ . '/../temp/latest_transaction';

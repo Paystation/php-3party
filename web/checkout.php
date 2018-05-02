@@ -1,5 +1,5 @@
 <?php
-require_once '../src/init.php';
+require_once __DIR__ . '/../src/init.php';
 
 $amount = isset($_REQUEST['amount']) ? $_REQUEST['amount'] * 100 : false;
 
@@ -18,12 +18,12 @@ else {
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>3 Party Paystation iFrame Sample Code</title>
+	<title>Hosted Payment Demo</title>
 	<link rel="stylesheet" type="text/css" href="css/paystation.css?1">
 </head>
 <body>
 <div class="paystation-fold"></div>
-<h2 class="header">Checkout</h2>
+<h2 class="header">Hosted Payment Demo</h2>
 
 <div class="content">
 	<div class="box">

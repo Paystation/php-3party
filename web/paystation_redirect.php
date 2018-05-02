@@ -1,7 +1,7 @@
 <?php
 // This page is where the user is redirected after making a payment. In this implementation, it is quite likely that this will never be seen since polling and postbacks will often give a quicker response.
 
-require_once '../src/init.php';
+require_once __DIR__ . '/../src/init.php';
 
 // Warning: This is untrusted data. If you choose to use this remember to implement access controls, or users will be able look up any transaction they like.
 $transactionId = isset($_GET['ti']) ? $_GET['ti'] : '';
@@ -23,12 +23,12 @@ elseif (!$txn->errorCode) {
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>3 Party Paystation iFrame Sample Code</title>
+	<title>Hosted Payment Demo</title>
 	<link rel="stylesheet" type="text/css" href="css/paystation.css?1">
 </head>
 <body>
 <div class="paystation-fold"></div>
-<h2 class="header">Checkout</h2>
+<h2 class="header">Hosted Payment Demo</h2>
 <div class="content">
 	<div class="box">
 		<a href="./">back</a>
