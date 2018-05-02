@@ -22,19 +22,19 @@ else {
 	<link rel="stylesheet" type="text/css" href="css/paystation.css?1">
 </head>
 <body>
-		<div class="paystation-fold"></div>
-		<h2 class="header">Checkout</h2>
+<div class="paystation-fold"></div>
+<h2 class="header">Checkout</h2>
 
-		<div class="content">
-			<div class="box">
-				<a href="./">back</a>
-				<br>
-				<br>
-				<div id="payment_wrapper" class="payment-wrapper">
-					<?= $transaction->hasError ? "<h1 style=\"color:red\">$transaction->errorMessage</h1>" : "<iframe class=\"paystation-payment-frame\" src=\"$transaction->digitalOrderUrl\"></iframe>" ?>
-				</div>
-			</div>
+<div class="content">
+	<div class="box">
+		<a href="./">back</a>
+		<br>
+		<br>
+		<div id="payment_wrapper" class="payment-wrapper">
+			<?= $transaction->hasError ? "<h1 style=\"color:red\">$transaction->errorMessage</h1>" : "<iframe class=\"paystation-payment-frame\" src=\"$transaction->digitalOrderUrl\"></iframe>" ?>
 		</div>
+	</div>
+</div>
 <script src="js/paystation.js"></script>
 <script>
 	const _paymentFrameWrapper = document.getElementById('payment_wrapper');

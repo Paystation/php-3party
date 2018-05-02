@@ -60,6 +60,8 @@
 	function onTransactionResponse(err, transaction) {
 		if (err) {
 			// have some error handling if you want
+			displayResult(err);
+			return;
 		}
 
 		// hasError is for all errors regardless if they come from paystation or us, which could happen before the transaction completes.
@@ -76,6 +78,8 @@
 		}
 		_transactionComplete = true;
 
+		window.localStorage.removeItem('txnId');
+		window.localStorage.removeItem('txnUrl');
 		Paystation.closePaymentFrame(_paymentFrame);
 		Paystation.stopPolling();
 		displayResult(transaction.errorMessage);
@@ -102,6 +106,18 @@
 		return valid;
 	}
 
+	function openPaymentForm(txnId, paymentUrl) {
+		window.localStorage.setItem('txnId', txnId);
+		window.localStorage.setItem('txnUrl', paymentUrl);
+		showQrCode(paymentUrl);
+
+		_transactionComplete = false;
+		_paymentFrameWrapper.innerHTML = '';
+		_paymentFrame = Paystation.createPaymentFrame(_paymentFrameWrapper, paymentUrl, onFrameLoaded, true);
+		_paymentFrame.classList.add('paystation-payment-frame');
+		Paystation.pollTransactionDetails(txnId, onTransactionResponse);
+	}
+
 	function payHere(e) {
 		const amount = parseFloat(_paymentAmountInput.value);
 		if (!validateAmount(_paymentAmountInput, amount)) {
@@ -125,13 +141,7 @@
 				return;
 			}
 
-			showQrCode(transaction.digitalOrderUrl);
-
-			_transactionComplete = false;
-			_paymentFrameWrapper.innerHTML = '';
-			_paymentFrame = Paystation.createPaymentFrame(_paymentFrameWrapper, transaction.digitalOrderUrl, onFrameLoaded, true);
-			_paymentFrame.classList.add('paystation-payment-frame');
-			Paystation.pollTransactionDetails(transaction.transactionId, onTransactionResponse);
+			openPaymentForm(transaction.transactionId, transaction.digitalOrderUrl);
 		});
 	}
 
@@ -164,6 +174,15 @@
 		_qrCodeWrapper.style.display = '';
 	}
 
+	function loadPreviousTransaction() {
+		const txnId = window.localStorage.getItem('txnId');
+		const txnUrl = window.localStorage.getItem('txnUrl');
+		if (txnId && txnUrl) {
+			openPaymentForm(txnId, txnUrl);
+		}
+	}
+
+	loadPreviousTransaction();
 	_paymentAmountButton.form.addEventListener('submit', payHere);
 	_checkoutButton.addEventListener('click', payAtCheckout);
 	_paymentAmountInput.addEventListener('blur', function () {
