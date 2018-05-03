@@ -3,28 +3,32 @@
 <head>
 	<title>Hosted Payment Demo</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="css/paystation.css?1">
-	<link rel="stylesheet" href="css/monokai-sublime.min.css">
+	<link rel="stylesheet" type="text/css" href="css/paystation.css">
 </head>
 <body>
-<div class="paystation-fold"></div>
-<h2 class="header">Hosted Payment Demo</h2>
+<div class="page">
+	<div class="paystation-fold"></div>
+	<h2 class="header">Hosted Payment Demo</h2>
+	<div class="content">
+		<div class="box center">
+			<p>Create a test transaction to see the payment form. <a href="https://www2.paystation.co.nz/for-developers/test-cards/" target="_blank" rel="nofollow">Test cards can be found here</a>.</p>
 
-<div class="content">
-	<div class="box center">
-		<p>Create a test transaction to see the payment form. <a href="//www2.paystation.co.nz/for-developers/test-cards/" target="_blank" rel="nofollow">Test cards can be found here</a>.</p>
-
-		<form method="post" action="checkout.php">
-			<label>$&nbsp;<input type="tel" name="amount" id="payment_amount" placeholder="Amount" value="10"/></label>
-			<button type="submit" id="payment_button">Pay Here</button>
-			<button type="submit" id="checkout_button" class="secondary">Pay at Checkout</button>
-		</form>
+			<form method="post" action="checkout.php">
+				<label>$&nbsp;<input type="tel" name="amount" id="payment_amount" placeholder="Amount" value="10"/></label>
+				<button type="submit" id="payment_button">Pay Here</button>
+				<button type="submit" id="checkout_button" class="secondary">Pay at Checkout</button>
+			</form>
+		</div>
+		<div class="box">
+			<div id="payment_wrapper" class="payment-wrapper"></div>
+		</div>
+		<div class="box center" id="payment-page-qr-code" style="display: none;">
+			Or use your phone.<br><br>
+		</div>
 	</div>
-	<div class="box">
-		<div id="payment_wrapper" class="payment-wrapper"></div>
-	</div>
-	<div class="box center" id="payment-page-qr-code" style="display: none;">
-		Or use your phone.<br><br>
+	<div class="flex"></div>
+	<div class="footer">
+		<a href="https://docs.paystation.co.nz/#payment-page" target="_blank" rel="nofollow">docs</a> - <a href="https://github.com/paystation/php-3party" target="_blank" rel="nofollow">github</a>
 	</div>
 </div>
 

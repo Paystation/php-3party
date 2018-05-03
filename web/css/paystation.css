@@ -44,8 +44,9 @@ button {
 	background-color: var(--primary-color);
 	border: solid 1px var(--primary-color);
 	border-radius: 3px;
-	padding: 0.33rem 0.5rem;
+	padding: 0.33rem 1rem;
 	margin: 0.33rem 0;
+	font-size: 1rem;
 }
 
 button:hover {
@@ -65,9 +66,10 @@ button.secondary:hover {
 
 input {
 	margin: 0.33rem 0;
-	padding: 0.33rem;
+	padding: 0.33rem 0.5rem;
 	border: solid 1px #777;
 	border-radius: 3px;
+	font-size: 1rem;
 }
 
 input.invalid {
@@ -86,6 +88,12 @@ pre {
 	margin: 1rem 0;
 }
 
+.page {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
 .paystation-fold {
 	height: 10px;
 	background: #a2a91b;
@@ -93,12 +101,23 @@ pre {
 }
 
 .header {
-	padding: 1rem 0.5rem 0.5rem;
 	min-height: 60px;
+}
+
+.header, .footer {
+	padding: 1rem 0.5rem 0.5rem;
 	text-align: center;
-	box-shadow: 1px 1px 10px 0 #ddd;
+	box-shadow: 0 1px 10px 0 #ddd;
 	background: #fff;
 	color: #333;
+}
+
+.footer {
+	min-height: 45px;
+}
+
+.flex {
+	flex: 1;
 }
 
 .content {
